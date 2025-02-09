@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Downloader</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        input { width: 80%; padding: 10px; margin: 10px; }
+        button { padding: 10px; background: blue; color: white; border: none; }
+        img, video { max-width: 100%; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Instagram Media Downloader</h2>
+    <input type="text" id="url" placeholder="Enter Instagram Post URL">
+    <button onclick="downloadMedia()">Download</button>
+    <div id="result"></div>
+
+    <script>
+        function downloadMedia() {
+            let url = document.getElementById("url").value;
+            fetch(`/download?url=${encodeURIComponent(url)}`)
+            .then(response => response.json())
+            .then(data => {
+                let resultDiv = document.getElementById("result");
+                if (data.error) {
+                    resultDiv.innerHTML = `<p style="color: red;">${data.error}</p>`;
+                } else if (data.type === "image") {
+                    resultDiv.innerHTML = `<img src="${data.url}" alt="Instagram Image">`;
+                } else {
+                    resultDiv.innerHTML = `<video controls><source src="${data.url}" type="video/mp4"></video>`;
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
